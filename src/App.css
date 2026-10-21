@@ -1,0 +1,449 @@
+/* ============================================================
+   App.css — SchoolHub SMS Full Design System
+   All .sms-* classes used by App.jsx live here
+   ============================================================ */
+
+/* ── GOOGLE FONT ── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* ── ROOT VIEWPORT ── */
+.sms-viewport {
+  min-height: 100vh;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow-x: hidden;
+  background: #0f172a;
+}
+
+/* ════════════════════════════════════════════════
+   BACKGROUND: SLIDESHOW + ORBS
+   ════════════════════════════════════════════════ */
+.sms-bg-container {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: #0f172a;
+}
+
+/* Each full-cover background-image layer */
+.sms-bg-slide {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transition: opacity 1s ease-in-out;
+}
+
+/* Stable fully-visible slide */
+.sms-bg-slide--visible {
+  opacity: 1;
+}
+
+/* Incoming slide while cross-fading */
+.sms-bg-slide--fade {
+  opacity: 0.4;
+}
+
+/* Outgoing slide fading away */
+.sms-bg-slide--out {
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+/* Dark overlay for text readability */
+.sms-bg-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(15, 23, 42, 0.72) 0%,
+    rgba(30, 27, 75, 0.60) 50%,
+    rgba(17, 24, 39, 0.70) 100%
+  );
+  z-index: 1;
+}
+
+/* Glowing ambient orbs */
+.sms-bg-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  mix-blend-mode: screen;
+  animation: floatOrb 20s infinite ease-in-out alternate;
+  z-index: 2;
+}
+.orb-1 {
+  width: 420px;
+  height: 420px;
+  background: rgba(59, 130, 246, 0.25);
+  top: -10%;
+  left: -8%;
+  animation-duration: 25s;
+}
+.orb-2 {
+  width: 520px;
+  height: 520px;
+  background: rgba(217, 119, 6, 0.20);
+  bottom: -15%;
+  right: -5%;
+  animation-duration: 30s;
+  animation-delay: -8s;
+}
+
+@keyframes floatOrb {
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(50px, -35px) scale(1.12); }
+  100% { transform: translate(-35px, 45px) scale(0.92); }
+}
+
+/* ════════════════════════════════════════════════
+   NAVIGATION BAR
+   ════════════════════════════════════════════════ */
+.sms-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(15, 23, 42, 0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.sms-nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 14px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sms-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.sms-logo {
+  font-size: 26px;
+}
+
+.sms-brand-text {
+  font-weight: 700;
+  font-size: 18px;
+  color: #ffffff;
+  letter-spacing: -0.4px;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.sms-menu-links {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sms-menu-item {
+  background: transparent;
+  color: #94a3b8;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: color 0.2s, background 0.2s;
+}
+.sms-menu-item:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.06);
+}
+.sms-menu-item.active {
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.10);
+  font-weight: 600;
+}
+
+.sms-btn-signin {
+  background: #3b82f6;
+  color: #ffffff;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.35);
+}
+.sms-btn-signin:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+}
+.sms-btn-signin.active {
+  background: #ffffff;
+  color: #1e1b4b;
+  box-shadow: none;
+}
+
+/* Slide indicator dots */
+.sms-slide-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 6px 0 10px;
+}
+.sms-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.25);
+  cursor: pointer;
+  transition: background 0.3s, transform 0.3s;
+  padding: 0;
+}
+.sms-dot.active {
+  background: #f59e0b;
+  transform: scale(1.4);
+}
+
+/* ════════════════════════════════════════════════
+   CONTENT WRAPPER
+   ════════════════════════════════════════════════ */
+.sms-content-wrapper {
+  position: relative;
+  z-index: 10;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 48px 24px;
+  box-sizing: border-box;
+}
+
+/* ════════════════════════════════════════════════
+   GLASS CARD — shared base
+   ════════════════════════════════════════════════ */
+.sms-glass-card {
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 20px;
+  padding: 44px;
+  color: #f1f5f9;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4);
+  animation: fadeInCard 0.4s ease-out forwards;
+}
+@keyframes fadeInCard {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ════════════════════════════════════════════════
+   HOME HERO
+   ════════════════════════════════════════════════ */
+.sms-hero-grid {
+  text-align: center;
+}
+.sms-hero-grid h1 {
+  font-size: clamp(28px, 5vw, 50px);
+  font-weight: 800;
+  margin: 0 0 18px 0;
+  line-height: 1.15;
+  background: linear-gradient(to right, #ffffff 30%, #94a3b8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.sms-hero-grid > p {
+  font-size: 18px;
+  color: #94a3b8;
+  max-width: 580px;
+  margin: 0 auto 36px auto;
+  line-height: 1.65;
+}
+.sms-cta-group {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.sms-btn-cta {
+  max-width: 220px;
+}
+.sms-btn-outline {
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  padding: 12px 28px !important;
+  border-radius: 8px !important;
+  color: #e2e8f0 !important;
+}
+
+/* ════════════════════════════════════════════════
+   SIGN IN FORM
+   ════════════════════════════════════════════════ */
+.sms-form-box {
+  max-width: 420px;
+  margin: 0 auto;
+  width: 100%;
+}
+.sms-form-box h2 {
+  text-align: center;
+  margin: 0 0 8px 0;
+  font-size: 26px;
+  font-weight: 700;
+}
+.sms-form-box > p {
+  text-align: center;
+  color: #94a3b8;
+  margin: 0 0 28px 0;
+  font-size: 14px;
+}
+.sms-form-group {
+  margin-bottom: 20px;
+}
+.sms-form-group label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #94a3b8;
+  margin-bottom: 7px;
+  letter-spacing: 0.6px;
+}
+.sms-form-control {
+  width: 100%;
+  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 12px 16px;
+  border-radius: 9px;
+  color: #ffffff;
+  font-size: 15px;
+  font-family: inherit;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.sms-form-control::placeholder {
+  color: rgba(148, 163, 184, 0.5);
+}
+.sms-form-control:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+.sms-btn-submit {
+  width: 100%;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 9px;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  margin-top: 12px;
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.30);
+  transition: opacity 0.2s, transform 0.2s;
+}
+.sms-btn-submit:hover {
+  opacity: 0.88;
+  transform: translateY(-1px);
+}
+
+/* ════════════════════════════════════════════════
+   INFO PAGES (About / Contact)
+   ════════════════════════════════════════════════ */
+.sms-info-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 16px;
+  margin-bottom: 28px;
+}
+.sms-info-header h2 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+}
+.sms-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+.sms-info-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  padding: 24px;
+  border-radius: 14px;
+  transition: background 0.2s, border-color 0.2s;
+}
+.sms-info-card:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(59, 130, 246, 0.25);
+}
+.sms-info-card h3 {
+  margin: 0 0 10px 0;
+  color: #3b82f6;
+  font-size: 16px;
+  font-weight: 600;
+}
+.sms-info-card p {
+  margin: 0;
+  color: #94a3b8;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* ════════════════════════════════════════════════
+   STUDENT PROFILE SHEET
+   ════════════════════════════════════════════════ */
+.sms-profile-sheet {
+  max-width: 520px;
+  margin: 0 auto;
+}
+.sms-sheet-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.sms-sheet-row:last-child {
+  border-bottom: none;
+}
+.sms-sheet-label {
+  color: #94a3b8;
+  font-size: 14px;
+}
+.sms-sheet-val {
+  font-weight: 600;
+  color: #f1f5f9;
+  font-size: 14px;
+}
+
+/* ════════════════════════════════════════════════
+   FOOTER
+   ════════════════════════════════════════════════ */
+.sms-footer {
+  position: relative;
+  z-index: 10;
+  background: rgba(15, 23, 42, 0.88);
+  color: #475569;
+  text-align: center;
+  padding: 18px 24px;
+  font-size: 13px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  margin-top: auto;
+}
