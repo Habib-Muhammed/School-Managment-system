@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { Users, Plus, Search, Filter, MoreVertical, Mail, Phone } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Users, Plus, Search, Filter, MoreVertical, Mail, Phone, Loader2 } from "lucide-react";
+import api from "../services/api";
 
 const initialStudents = [
   { id: "STU-001", name: "Habib Muhammed", email: "habib@example.com", phone: "+1 234 567 890", department: "Computer Science", grade: "A", status: "Active" },
@@ -11,7 +12,38 @@ const initialStudents = [
 
 export default function Students() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [students] = useState(initialStudents);
+  const [students, setStudents] = useState(initialStudents);
+  const [loading, setLoading] = useState(false);
+  const [isBackendConnected, setIsBackendConnected] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+    api
+      .get("/Student")
+      .then((res) => {
+        const data = res.data?.data?.items || res.data?.data || res.data;
+        if (Array.isArray(data) && data.length > 0) {
+          const mapped = data.map((s, index) => ({
+            id: s.studentIdNumber || s.idNumber || s.id || `STU-${index + 1}`,
+            name: `${s.firstName || ""} ${s.lastName || ""}`.trim() || s.name || "Student",
+            email: s.email || "No email",
+            phone: s.phoneNumber || s.phone || "No phone",
+            department: s.departmentName || s.department || "General",
+            grade: s.currentGradeLevel || s.grade || "N/A",
+            status: s.enrollmentStatus || s.status || "Active",
+          }));
+          setStudents(mapped);
+          setIsBackendConnected(true);
+        }
+      })
+      .catch(() => {
+        // Keep initial demo data if backend is offline
+        setIsBackendConnected(false);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
 
   const filteredStudents = students.filter(
     (s) =>
@@ -25,7 +57,14 @@ export default function Students() {
       {/* Header */}
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Students</h1>
+          <div className="flex items-center gap-3">
+            <h1 className="text-3xl font-bold text-slate-900">Students</h1>
+            {isBackendConnected && (
+              <span className="rounded-full bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 text-xs font-semibold text-emerald-700">
+                Live DB
+              </span>
+            )}
+          </div>
           <p className="mt-1 text-slate-500">Manage student profiles, enrollment, and academic records</p>
         </div>
 
@@ -78,42 +117,57 @@ export default function Students() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {filteredStudents.map((student) => (
-                <tr key={student.id} className="transition hover:bg-slate-50/60">
-                  <td className="px-6 py-4 font-semibold text-slate-900">{student.name}</td>
-                  <td className="px-6 py-4 font-mono text-xs text-slate-500">{student.id}</td>
-                  <td className="px-6 py-4">{student.department}</td>
-                  <td className="px-6 py-4">
-                    <div className="flex flex-col gap-0.5 text-xs">
-                      <span className="flex items-center gap-1.5 text-slate-600">
-                        <Mail size={13} className="text-slate-400" />
-                        {student.email}
-                      </span>
-                      <span className="flex items-center gap-1.5 text-slate-500">
-                        <Phone size={13} className="text-slate-400" />
-                        {student.phone}
-                      </span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 font-bold text-slate-800">{student.grade}</td>
-                  <td className="px-6 py-4">
-                    <span
-                      className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${
-                        student.status === "Active"
-                          ? "bg-emerald-50 text-emerald-700"
-                          : "bg-slate-100 text-slate-600"
-                      }`}
-                    >
-                      {student.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <button type="button" className="rounded-lg p-1 text-slate-400 hover:text-slate-600">
-                      <MoreVertical size={16} />
-                    </button>
+              {loading ? (
+                <tr>
+                  <td colSpan="7" className="py-12 text-center text-slate-400">
+                    <Loader2 size={24} className="mx-auto animate-spin text-teal-600" />
+                    <p className="mt-2 text-xs">Loading students...</p>
                   </td>
                 </tr>
-              ))}
+              ) : filteredStudents.length === 0 ? (
+                <tr>
+                  <td colSpan="7" className="py-12 text-center text-slate-400">
+                    No students match your search query.
+                  </td>
+                </tr>
+              ) : (
+                filteredStudents.map((student) => (
+                  <tr key={student.id} className="transition hover:bg-slate-50/60">
+                    <td className="px-6 py-4 font-semibold text-slate-900">{student.name}</td>
+                    <td className="px-6 py-4 font-mono text-xs text-slate-500">{student.id}</td>
+                    <td className="px-6 py-4">{student.department}</td>
+                    <td className="px-6 py-4">
+                      <div className="flex flex-col gap-0.5 text-xs">
+                        <span className="flex items-center gap-1.5 text-slate-600">
+                          <Mail size={13} className="text-slate-400" />
+                          {student.email}
+                        </span>
+                        <span className="flex items-center gap-1.5 text-slate-500">
+                          <Phone size={13} className="text-slate-400" />
+                          {student.phone}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 font-bold text-slate-800">{student.grade}</td>
+                    <td className="px-6 py-4">
+                      <span
+                        className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${
+                          student.status === "Active" || student.status === "Enrolled"
+                            ? "bg-emerald-50 text-emerald-700"
+                            : "bg-slate-100 text-slate-600"
+                        }`}
+                      >
+                        {student.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <button type="button" className="rounded-lg p-1 text-slate-400 hover:text-slate-600">
+                        <MoreVertical size={16} />
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

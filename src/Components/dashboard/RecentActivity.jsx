@@ -1,6 +1,6 @@
 import { Clock, CheckCircle2, UserPlus, AlertCircle } from "lucide-react";
 
-const activities = [
+const defaultActivities = [
   {
     id: 1,
     title: "New student enrolled: Sarah Jenkins",
@@ -35,7 +35,18 @@ const activities = [
   },
 ];
 
-export default function RecentActivity() {
+export default function RecentActivity({ customActivities }) {
+  const displayList = customActivities && customActivities.length > 0
+    ? customActivities.map((act, index) => ({
+        id: act.id || index,
+        title: act.activityTitle || act.title || act.description || "Activity recorded",
+        department: act.department || act.module || "General",
+        time: act.timestamp || act.time || "Recently",
+        icon: UserPlus,
+        color: "text-teal-600 bg-teal-50",
+      }))
+    : defaultActivities;
+
   return (
     <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
       <div className="flex items-center justify-between border-b border-slate-100 pb-4">
@@ -50,7 +61,7 @@ export default function RecentActivity() {
       </div>
 
       <div className="mt-4 divide-y divide-slate-100">
-        {activities.map(({ id, title, department, time, icon: Icon, color }) => (
+        {displayList.map(({ id, title, department, time, icon: Icon, color }) => (
           <div key={id} className="flex items-center justify-between py-3.5">
             <div className="flex items-center gap-3">
               <div className={`rounded-xl p-2.5 ${color}`}>

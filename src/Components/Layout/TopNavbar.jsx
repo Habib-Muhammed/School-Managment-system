@@ -1,6 +1,9 @@
 import { Bell, Search, CircleUserRound } from "lucide-react";
+import { useAuth } from "../../context/AuthContext";
 
 export default function TopNavbar() {
+  const { user } = useAuth();
+
   return (
     <header className="flex min-h-20 items-center justify-between gap-4 border-b border-slate-200 bg-white px-6">
       <div>
@@ -25,18 +28,20 @@ export default function TopNavbar() {
         <button
           type="button"
           aria-label="Notifications"
-          className="rounded-full p-2 hover:bg-slate-100"
+          className="rounded-full p-2 hover:bg-slate-100 text-slate-600 transition"
         >
-          <Bell size={21} className="text-slate-600" />
+          <Bell size={21} />
         </button>
 
-        <button
-          type="button"
-          aria-label="User profile"
-          className="rounded-full p-2 hover:bg-slate-100"
-        >
-          <CircleUserRound size={27} className="text-teal-700" />
-        </button>
+        <div className="flex items-center gap-2.5 pl-2 border-l border-slate-200">
+          <div className="hidden sm:block text-right text-xs">
+            <p className="font-bold text-slate-800">{user?.username || "Administrator"}</p>
+            <p className="text-[11px] text-teal-600 font-medium">{user?.email || "admin@admin.com"}</p>
+          </div>
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-teal-50 text-teal-700">
+            <CircleUserRound size={26} />
+          </div>
+        </div>
       </div>
     </header>
   );
