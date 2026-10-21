@@ -1,117 +1,171 @@
 /* ============================================================
-   App.css — SchoolHub SMS Full Design System
-   All .sms-* classes used by App.jsx live here
+   SchoolHub SMS — Hybrid Aurora Design Upgrade
+   Compatible with existing .sms-* classes in App.jsx.
+   Append this file AFTER the current App.css rules, or replace
+   the old file with the combined stylesheet if desired.
+   Theme: animated landing page + clean light dashboard.
    ============================================================ */
 
-/* ── GOOGLE FONT ── */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-
-/* ── ROOT VIEWPORT ── */
-.sms-viewport {
-  min-height: 100vh;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  overflow-x: hidden;
-  background: #0f172a;
+/* ---------- Design tokens ---------- */
+:root {
+  --sms-brand: #2563eb;
+  --sms-brand-hover: #1d4ed8;
+  --sms-teal: #0f9f96;
+  --sms-violet: #7c3aed;
+  --sms-ink: #172033;
+  --sms-muted: #64748b;
+  --sms-line: #e2e8f0;
+  --sms-surface: #ffffff;
+  --sms-page: #f5f7fb;
+  --sms-shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.05);
+  --sms-shadow-md: 0 12px 32px rgba(15, 23, 42, 0.09);
+  --sms-shadow-lg: 0 24px 60px rgba(15, 23, 42, 0.16);
 }
 
-/* ════════════════════════════════════════════════
-   BACKGROUND: SLIDESHOW + ORBS
-   ════════════════════════════════════════════════ */
+/* ---------- Base / landing-page canvas ---------- */
+.sms-viewport {
+  min-height: 100vh;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  position: relative;
+  isolation: isolate;
+  overflow-x: clip;
+  background: var(--sms-page);
+  color: var(--sms-ink);
+}
+
+/* The fixed visual background sits behind all page content. */
 .sms-bg-container {
   position: fixed;
   inset: 0;
-  z-index: 0;
-  background: #0f172a;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 12% 15%, rgba(59, 130, 246, 0.13), transparent 36%),
+    radial-gradient(ellipse at 88% 20%, rgba(20, 184, 166, 0.11), transparent 34%),
+    radial-gradient(ellipse at 55% 92%, rgba(139, 92, 246, 0.09), transparent 38%),
+    #f5f7fb;
 }
 
-/* Each full-cover background-image layer */
+/* Keep slideshow images beneath the aurora and overlay. */
 .sms-bg-slide {
   position: absolute;
   inset: 0;
+  z-index: 0;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  transition: opacity 1s ease-in-out;
+  opacity: 0;
+  transition: opacity 1.2s ease-in-out;
+  will-change: opacity;
 }
 
-/* Stable fully-visible slide */
 .sms-bg-slide--visible {
   opacity: 1;
 }
 
-/* Incoming slide while cross-fading */
 .sms-bg-slide--fade {
-  opacity: 0.4;
+  opacity: 0.45;
 }
 
-/* Outgoing slide fading away */
 .sms-bg-slide--out {
   opacity: 0;
-  transition: opacity 1s ease-in-out;
 }
 
-/* Dark overlay for text readability */
+/* Light landing-page veil: keeps photography soft and text legible. */
 .sms-bg-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    135deg,
-    rgba(15, 23, 42, 0.45) 0%,
-    rgba(30, 27, 75, 0.35) 50%,
-    rgba(17, 24, 39, 0.45) 100%
-  );
   z-index: 1;
+  background:
+    linear-gradient(135deg,
+      rgba(248, 250, 252, 0.80) 0%,
+      rgba(239, 246, 255, 0.72) 48%,
+      rgba(240, 253, 250, 0.78) 100%);
 }
 
-/* Glowing ambient orbs */
+/* Animated, blurred aurora glow. Pure CSS; no JS dependency. */
+.sms-bg-container::before {
+  content: "";
+  position: absolute;
+  inset: -28%;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 20% 28%, rgba(59, 130, 246, 0.22), transparent 38%),
+    radial-gradient(ellipse at 76% 25%, rgba(20, 184, 166, 0.19), transparent 36%),
+    radial-gradient(ellipse at 54% 78%, rgba(139, 92, 246, 0.14), transparent 40%);
+  filter: blur(38px);
+  transform: translate3d(0, 0, 0);
+  animation: smsAuroraDrift 26s ease-in-out infinite alternate;
+}
+
+/* Subtle dot texture, deliberately low contrast. */
+.sms-bg-overlay::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(rgba(71, 85, 105, 0.22) 0.65px, transparent 0.65px);
+  background-size: 26px 26px;
+  opacity: 0.16;
+}
+
+/* Existing decorative orbs remain supported. */
 .sms-bg-orb {
   position: absolute;
+  z-index: 3;
   border-radius: 50%;
-  filter: blur(90px);
-  mix-blend-mode: screen;
-  animation: floatOrb 20s infinite ease-in-out alternate;
-  z-index: 2;
+  filter: blur(100px);
+  mix-blend-mode: multiply;
+  opacity: 0.48;
+  pointer-events: none;
+  animation: floatOrb 24s ease-in-out infinite alternate;
+  will-change: transform;
 }
+
 .orb-1 {
   width: 420px;
   height: 420px;
-  background: rgba(59, 130, 246, 0.25);
   top: -10%;
   left: -8%;
-  animation-duration: 25s;
+  background: rgba(59, 130, 246, 0.24);
+  animation-duration: 28s;
 }
+
 .orb-2 {
   width: 520px;
   height: 520px;
-  background: rgba(217, 119, 6, 0.20);
-  bottom: -15%;
-  right: -5%;
-  animation-duration: 30s;
+  bottom: -18%;
+  right: -8%;
+  background: rgba(20, 184, 166, 0.20);
+  animation-duration: 32s;
   animation-delay: -8s;
 }
 
-@keyframes floatOrb {
-  0%   { transform: translate(0, 0) scale(1); }
-  50%  { transform: translate(50px, -35px) scale(1.12); }
-  100% { transform: translate(-35px, 45px) scale(0.92); }
+@keyframes smsAuroraDrift {
+  0%   { transform: translate3d(-2%, -1%, 0) scale(1); }
+  50%  { transform: translate3d(2%, 1.5%, 0) scale(1.04); }
+  100% { transform: translate3d(-1%, 3%, 0) scale(1.08); }
 }
 
-/* ════════════════════════════════════════════════
-   NAVIGATION BAR
-   ════════════════════════════════════════════════ */
+@keyframes floatOrb {
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  50%  { transform: translate3d(28px, -22px, 0) scale(1.06); }
+  100% { transform: translate3d(-20px, 24px, 0) scale(0.96); }
+}
+
+/* ---------- Navigation: translucent, readable ---------- */
 .sms-navbar {
   position: sticky;
   top: 0;
   z-index: 20;
-  background: rgba(15, 23, 42, 0.72);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.82);
+  color: var(--sms-ink);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.85);
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.035);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
 }
 
 .sms-nav-container {
@@ -136,12 +190,13 @@
 }
 
 .sms-brand-text {
-  font-weight: 700;
+  font-weight: 800;
   font-size: 18px;
-  color: #ffffff;
-  letter-spacing: -0.4px;
-  background: linear-gradient(135deg, #f59e0b, #d97706);
+  letter-spacing: -0.45px;
+  background: linear-gradient(110deg, #1d4ed8, #0f9f96);
   -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
   -webkit-text-fill-color: transparent;
 }
 
@@ -153,297 +208,741 @@
 
 .sms-menu-item {
   background: transparent;
-  color: #94a3b8;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 8px;
+  color: #475569;
+  border: 1px solid transparent;
+  padding: 9px 15px;
+  border-radius: 10px;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   font-family: inherit;
   cursor: pointer;
-  transition: color 0.2s, background 0.2s;
+  transition: color 180ms ease, background 180ms ease, border-color 180ms ease, transform 180ms ease;
 }
+
 .sms-menu-item:hover {
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.06);
+  color: #1d4ed8;
+  background: rgba(37, 99, 235, 0.07);
+  transform: translateY(-1px);
 }
+
 .sms-menu-item.active {
-  color: #10b981;
-  background: rgba(16, 185, 129, 0.10);
-  font-weight: 600;
+  color: #1d4ed8;
+  background: rgba(37, 99, 235, 0.09);
+  border-color: rgba(37, 99, 235, 0.10);
+  font-weight: 700;
 }
 
 .sms-btn-signin {
-  background: #3b82f6;
-  color: #ffffff;
-  border: none;
-  padding: 8px 20px;
-  border-radius: 8px;
+  background: linear-gradient(135deg, #2563eb, #0f9f96);
+  color: #fff;
+  border: 0;
+  padding: 9px 20px;
+  border-radius: 10px;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   font-family: inherit;
   cursor: pointer;
-  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
-  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.35);
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.20);
+  transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
 }
+
 .sms-btn-signin:hover {
-  background: #2563eb;
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.26);
+  filter: saturate(1.08);
 }
+
 .sms-btn-signin.active {
-  background: #ffffff;
-  color: #1e1b4b;
+  background: #eaf2ff;
+  color: #1d4ed8;
   box-shadow: none;
 }
 
-/* Slide indicator dots */
+/* Slideshow indicator controls */
 .sms-slide-dots {
   display: flex;
   justify-content: center;
   gap: 8px;
   padding: 6px 0 10px;
 }
+
 .sms-dot {
   width: 8px;
   height: 8px;
-  border-radius: 50%;
-  border: none;
-  background: rgba(255, 255, 255, 0.25);
+  border-radius: 99px;
+  border: 0;
+  background: rgba(71, 85, 105, 0.28);
   cursor: pointer;
-  transition: background 0.3s, transform 0.3s;
+  transition: background 200ms ease, transform 200ms ease, width 200ms ease;
   padding: 0;
 }
+
 .sms-dot.active {
-  background: #f59e0b;
-  transform: scale(1.4);
+  width: 22px;
+  border-radius: 99px;
+  background: var(--sms-brand);
 }
 
-/* ════════════════════════════════════════════════
-   CONTENT WRAPPER
-   ════════════════════════════════════════════════ */
+/* ---------- Content and hero ---------- */
 .sms-content-wrapper {
   position: relative;
   z-index: 10;
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;
-  padding: 48px 24px;
+  padding: 36px 24px 60px;
   box-sizing: border-box;
 }
 
-/* ════════════════════════════════════════════════
-   GLASS CARD — shared base
-   ════════════════════════════════════════════════ */
-.sms-glass-card {
-  background: rgba(15, 23, 42, 0.55);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  border-radius: 20px;
-  padding: 44px;
-  color: #f1f5f9;
-  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4);
-  animation: fadeInCard 0.4s ease-out forwards;
-}
-@keyframes fadeInCard {
-  from { opacity: 0; transform: translateY(18px); }
-  to   { opacity: 1; transform: translateY(0); }
+/* ---------- Home Layout & Split Hero ---------- */
+.sms-home-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+  width: 100%;
 }
 
-/* ════════════════════════════════════════════════
-   HOME HERO
-   ════════════════════════════════════════════════ */
+.sms-hero-split {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 36px;
+  align-items: center;
+  padding: 38px 42px;
+}
+
+.sms-hero-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.sms-hero-pill {
+  display: inline-block;
+  padding: 6px 14px;
+  background: rgba(37, 99, 235, 0.08);
+  border: 1px solid rgba(37, 99, 235, 0.16);
+  color: #1d4ed8;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 99px;
+  margin-bottom: 14px;
+}
+
+.sms-hero-text h1 {
+  font-size: clamp(2rem, 3.8vw, 3rem);
+  font-weight: 800;
+  margin: 0 0 16px;
+  line-height: 1.15;
+  letter-spacing: -0.04em;
+  background: linear-gradient(110deg, #172033 10%, #1d4ed8 58%, #0f9f96 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.sms-hero-text > p {
+  font-size: 16px;
+  color: #475569;
+  line-height: 1.7;
+  margin: 0 0 28px;
+}
+
+.sms-hero-text .sms-cta-group {
+  justify-content: flex-start;
+}
+
+/* Foreground Showcase Frame */
+.sms-hero-showcase {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sms-showcase-frame {
+  position: relative;
+  width: 100%;
+  height: 330px;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.12);
+  border: 2px solid #ffffff;
+  background: #0f172a;
+}
+
+.sms-showcase-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.sms-showcase-frame:hover .sms-showcase-img {
+  transform: scale(1.03);
+}
+
+.sms-showcase-caption-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(15, 23, 42, 0.88) 0%, rgba(15, 23, 42, 0.4) 70%, transparent 100%);
+  padding: 24px 18px 14px;
+  color: #ffffff;
+}
+
+.sms-showcase-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: #2563eb;
+  color: #ffffff;
+  padding: 3px 8px;
+  border-radius: 6px;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.sms-showcase-caption-bar p {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #f1f5f9;
+}
+
+.sms-showcase-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.90);
+  color: #1e293b;
+  border: none;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: background 0.2s, transform 0.2s;
+  z-index: 5;
+}
+
+.sms-showcase-arrow:hover {
+  background: #ffffff;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.sms-showcase-arrow.prev {
+  left: 12px;
+}
+
+.sms-showcase-arrow.next {
+  right: 12px;
+}
+
+.sms-showcase-thumbs {
+  display: flex;
+  gap: 10px;
+}
+
+.sms-thumb-btn {
+  flex: 1;
+  height: 58px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  padding: 0;
+  cursor: pointer;
+  background: #e2e8f0;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.sms-thumb-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.sms-thumb-btn.active {
+  border-color: #2563eb;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+}
+
+/* Gallery Section */
+.sms-gallery-block {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 10px 0;
+}
+
+.sms-gallery-header {
+  text-align: center;
+}
+
+.sms-gallery-header h2 {
+  font-size: 26px;
+  font-weight: 800;
+  color: #172033;
+  margin: 0 0 6px;
+}
+
+.sms-gallery-header p {
+  color: #64748b;
+  font-size: 15px;
+  margin: 0;
+}
+
+.sms-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.sms-gallery-card {
+  background: rgba(255, 255, 255, 0.88);
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  box-shadow: var(--sms-shadow-sm);
+  transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.sms-gallery-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--sms-shadow-md);
+  border-color: #bfdbfe;
+}
+
+.sms-card-img-box {
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+  background: #f1f5f9;
+}
+
+.sms-card-img-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.35s ease;
+}
+
+.sms-gallery-card:hover .sms-card-img-box img {
+  transform: scale(1.06);
+}
+
+.sms-card-body {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sms-card-body h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 750;
+  color: #172033;
+}
+
+.sms-card-body p {
+  margin: 0;
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.6;
+}
+
 .sms-hero-grid {
   text-align: center;
 }
+
 .sms-hero-grid h1 {
-  font-size: clamp(28px, 5vw, 50px);
+  font-size: clamp(2rem, 5vw, 3.6rem);
   font-weight: 800;
-  margin: 0 0 18px 0;
-  line-height: 1.15;
-  background: linear-gradient(to right, #ffffff 30%, #94a3b8);
+  margin: 0 0 18px;
+  line-height: 1.12;
+  letter-spacing: -0.045em;
+  background: linear-gradient(110deg, #172033 10%, #1d4ed8 58%, #0f9f96 100%);
   -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
   -webkit-text-fill-color: transparent;
 }
+
 .sms-hero-grid > p {
-  font-size: 18px;
-  color: #94a3b8;
-  max-width: 580px;
-  margin: 0 auto 36px auto;
-  line-height: 1.65;
+  font-size: clamp(1rem, 2vw, 1.125rem);
+  color: #475569;
+  max-width: 620px;
+  margin: 0 auto 36px;
+  line-height: 1.75;
 }
+
 .sms-cta-group {
   display: flex;
   justify-content: center;
-  gap: 16px;
+  gap: 14px;
   flex-wrap: wrap;
 }
+
 .sms-btn-cta {
   max-width: 220px;
 }
+
 .sms-btn-outline {
-  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  border: 1px solid #cbd5e1 !important;
   padding: 12px 28px !important;
-  border-radius: 8px !important;
-  color: #e2e8f0 !important;
+  border-radius: 10px !important;
+  color: #334155 !important;
+  background: rgba(255, 255, 255, 0.58) !important;
+  transition: background 180ms ease, border-color 180ms ease, transform 180ms ease !important;
 }
 
-/* ════════════════════════════════════════════════
-   SIGN IN FORM
-   ════════════════════════════════════════════════ */
+.sms-btn-outline:hover {
+  background: #fff !important;
+  border-color: #93c5fd !important;
+  transform: translateY(-1px);
+}
+
+/* ---------- Shared glass card: bright, light, restrained ---------- */
+.sms-glass-card {
+  background: rgba(255, 255, 255, 0.84);
+  color: var(--sms-ink);
+  border: 1px solid rgba(255, 255, 255, 0.90);
+  border-radius: 22px;
+  padding: 44px;
+  box-shadow: var(--sms-shadow-lg), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(22px) saturate(130%);
+  -webkit-backdrop-filter: blur(22px) saturate(130%);
+  animation: fadeInCard 420ms ease-out both;
+  transition: box-shadow 220ms ease, border-color 220ms ease;
+}
+
+.sms-glass-card:hover {
+  border-color: rgba(191, 219, 254, 0.95);
+  box-shadow: 0 28px 68px rgba(15, 23, 42, 0.18);
+}
+
+@keyframes fadeInCard {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- Sign-in form ---------- */
 .sms-form-box {
   max-width: 420px;
   margin: 0 auto;
   width: 100%;
 }
+
 .sms-form-box h2 {
   text-align: center;
-  margin: 0 0 8px 0;
+  margin: 0 0 8px;
   font-size: 26px;
-  font-weight: 700;
-}
-.sms-form-box > p {
-  text-align: center;
-  color: #94a3b8;
-  margin: 0 0 28px 0;
-  font-size: 14px;
-}
-.sms-form-group {
-  margin-bottom: 20px;
-}
-.sms-form-group label {
-  display: block;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: #94a3b8;
-  margin-bottom: 7px;
-  letter-spacing: 0.6px;
-}
-.sms-form-control {
-  width: 100%;
-  background: rgba(15, 23, 42, 0.65);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  padding: 12px 16px;
-  border-radius: 9px;
-  color: #ffffff;
-  font-size: 15px;
-  font-family: inherit;
-  box-sizing: border-box;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-.sms-form-control::placeholder {
-  color: rgba(148, 163, 184, 0.5);
-}
-.sms-form-control:focus {
-  outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
-}
-.sms-btn-submit {
-  width: 100%;
-  background: linear-gradient(135deg, #10b981, #059669);
-  color: white;
-  border: none;
-  padding: 14px;
-  border-radius: 9px;
-  font-size: 15px;
-  font-weight: 700;
-  font-family: inherit;
-  cursor: pointer;
-  margin-top: 12px;
-  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.30);
-  transition: opacity 0.2s, transform 0.2s;
-}
-.sms-btn-submit:hover {
-  opacity: 0.88;
-  transform: translateY(-1px);
+  font-weight: 800;
+  color: #172033;
+  letter-spacing: -0.025em;
 }
 
-/* ════════════════════════════════════════════════
-   INFO PAGES (About / Contact)
-   ════════════════════════════════════════════════ */
-.sms-info-header {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  padding-bottom: 16px;
-  margin-bottom: 28px;
-}
-.sms-info-header h2 {
-  margin: 0;
-  font-size: 28px;
-  font-weight: 700;
-}
-.sms-info-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 20px;
-}
-.sms-info-card {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  padding: 24px;
-  border-radius: 14px;
-  transition: background 0.2s, border-color 0.2s;
-}
-.sms-info-card:hover {
-  background: rgba(255, 255, 255, 0.07);
-  border-color: rgba(59, 130, 246, 0.25);
-}
-.sms-info-card h3 {
-  margin: 0 0 10px 0;
-  color: #3b82f6;
-  font-size: 16px;
-  font-weight: 600;
-}
-.sms-info-card p {
-  margin: 0;
-  color: #94a3b8;
+.sms-form-box > p {
+  text-align: center;
+  color: #64748b;
+  margin: 0 0 28px;
   font-size: 14px;
   line-height: 1.6;
 }
 
-/* ════════════════════════════════════════════════
-   STUDENT PROFILE SHEET
-   ════════════════════════════════════════════════ */
+.sms-form-group {
+  margin-bottom: 20px;
+}
+
+.sms-form-group label {
+  display: block;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #475569;
+  margin-bottom: 8px;
+  letter-spacing: 0.07em;
+}
+
+.sms-form-control {
+  width: 100%;
+  background: rgba(248, 250, 252, 0.94);
+  border: 1px solid #cbd5e1;
+  padding: 12px 15px;
+  border-radius: 10px;
+  color: #172033;
+  font-size: 15px;
+  font-family: inherit;
+  box-sizing: border-box;
+  transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+
+.sms-form-control::placeholder {
+  color: #94a3b8;
+}
+
+.sms-form-control:hover {
+  border-color: #94a3b8;
+}
+
+.sms-form-control:focus {
+  outline: none;
+  border-color: #3b82f6;
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
+}
+
+.sms-btn-submit {
+  width: 100%;
+  background: linear-gradient(110deg, #2563eb, #0f9f96);
+  color: #fff;
+  border: 0;
+  padding: 14px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 800;
+  font-family: inherit;
+  cursor: pointer;
+  margin-top: 12px;
+  box-shadow: 0 7px 20px rgba(37, 99, 235, 0.20);
+  transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
+}
+
+.sms-btn-submit:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 26px rgba(37, 99, 235, 0.26);
+  filter: saturate(1.08);
+}
+
+.sms-btn-submit:active,
+.sms-btn-signin:active {
+  transform: translateY(0);
+}
+
+/* ---------- About / contact info cards ---------- */
+.sms-info-header {
+  border-bottom: 1px solid var(--sms-line);
+  padding-bottom: 16px;
+  margin-bottom: 28px;
+}
+
+.sms-info-header h2 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 800;
+  color: #172033;
+  letter-spacing: -0.025em;
+}
+
+.sms-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+  gap: 20px;
+}
+
+.sms-info-card {
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: var(--sms-shadow-sm);
+  transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+}
+
+.sms-info-card:hover {
+  transform: translateY(-3px);
+  background: #fff;
+  border-color: #bfdbfe;
+  box-shadow: var(--sms-shadow-md);
+}
+
+.sms-info-card h3 {
+  margin: 0 0 10px;
+  color: #1d4ed8;
+  font-size: 16px;
+  font-weight: 750;
+}
+
+.sms-info-card p {
+  margin: 0;
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* ---------- Student profile sheet ---------- */
 .sms-profile-sheet {
   max-width: 520px;
   margin: 0 auto;
 }
+
 .sms-sheet-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 16px;
   padding: 15px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid #edf1f6;
 }
+
 .sms-sheet-row:last-child {
-  border-bottom: none;
+  border-bottom: 0;
 }
+
 .sms-sheet-label {
-  color: #94a3b8;
-  font-size: 14px;
-}
-.sms-sheet-val {
-  font-weight: 600;
-  color: #f1f5f9;
+  color: #64748b;
   font-size: 14px;
 }
 
-/* ════════════════════════════════════════════════
-   FOOTER
-   ════════════════════════════════════════════════ */
+.sms-sheet-val {
+  font-weight: 700;
+  color: #172033;
+  font-size: 14px;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+/* ---------- Footer ---------- */
 .sms-footer {
   position: relative;
   z-index: 10;
-  background: rgba(15, 23, 42, 0.88);
-  color: #475569;
+  background: rgba(255, 255, 255, 0.72);
+  color: #64748b;
   text-align: center;
   padding: 18px 24px;
   font-size: 13px;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid rgba(226, 232, 240, 0.8);
   margin-top: auto;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+/* ---------- Keyboard accessibility ---------- */
+.sms-menu-item:focus-visible,
+.sms-btn-signin:focus-visible,
+.sms-btn-submit:focus-visible,
+.sms-dot:focus-visible,
+.sms-btn-outline:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.45);
+  outline-offset: 3px;
+}
+
+/* ---------- Responsive layout ---------- */
+@media (max-width: 768px) {
+  .sms-nav-container {
+    padding: 12px 16px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .sms-menu-links {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .sms-content-wrapper {
+    padding: 32px 16px;
+  }
+
+  .sms-glass-card {
+    padding: 28px 22px;
+    border-radius: 18px;
+  }
+
+  .sms-bg-orb {
+    filter: blur(75px);
+    opacity: 0.34;
+  }
+
+  .sms-bg-container::before {
+    filter: blur(45px);
+  }
+
+  .sms-hero-grid > p {
+    font-size: 16px;
+  }
+
+  .sms-hero-split {
+    grid-template-columns: 1fr;
+    padding: 24px 18px;
+    gap: 24px;
+  }
+
+  .sms-hero-text {
+    align-items: center;
+    text-align: center;
+  }
+
+  .sms-hero-text .sms-cta-group {
+    justify-content: center;
+  }
+
+  .sms-showcase-frame {
+    height: 260px;
+  }
+}
+
+@media (max-width: 420px) {
+  .sms-brand-text {
+    font-size: 16px;
+  }
+
+  .sms-menu-item {
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+
+  .sms-glass-card {
+    padding: 22px 16px;
+  }
+
+  .sms-sheet-row {
+    align-items: flex-start;
+  }
+}
+
+/* ---------- Motion accessibility ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .sms-bg-container::before,
+  .sms-bg-orb,
+  .sms-glass-card {
+    animation: none !important;
+  }
+
+  .sms-bg-slide,
+  .sms-glass-card,
+  .sms-menu-item,
+  .sms-btn-signin,
+  .sms-btn-submit,
+  .sms-info-card,
+  .sms-btn-outline {
+    transition: none !important;
+  }
+
+  .sms-menu-item:hover,
+  .sms-btn-signin:hover,
+  .sms-btn-submit:hover,
+  .sms-info-card:hover,
+  .sms-btn-outline:hover {
+    transform: none;
+  }
 }

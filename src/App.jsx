@@ -2,6 +2,11 @@ import { useState, useEffect } from 'react';
 import slide1 from './assets/images/slide1.jpg';
 import slide2 from './assets/images/slide2.jpg';
 import slide3 from './assets/images/slide3.jpg';
+import studentsImg from './assets/images/students.jpg';
+import teachersImg from './assets/images/teachers.jpg';
+import classroomImg from './assets/images/classroom.jpg';
+import projectImg from './assets/images/project.jpg';
+import materialsImg from './assets/images/materials.jpg';
 import schoolLogo from './assets/logos/hero.jpg';
 import './styles/main.css';
 import './App.css';
@@ -117,25 +122,129 @@ function App() {
 
         {/* HOME */}
         {currentPage === 'home' && (
-          <div className="sms-glass-card sms-hero-grid">
-            <h1>School Management System</h1>
-            <p>
-              Welcome to your comprehensive school management portal. Track student records,
-              academic progress, and campus activities with modern real-time performance.
-            </p>
-            <div className="sms-cta-group">
-              <button
-                className="sms-btn-submit sms-btn-cta"
-                onClick={() => setCurrentPage('dashboard')}
-              >
-                View Student Profile
-              </button>
-              <button
-                className="sms-menu-item sms-btn-outline"
-                onClick={() => setCurrentPage('about')}
-              >
-                Learn More
-              </button>
+          <div className="sms-home-layout">
+            <div className="sms-glass-card sms-hero-split">
+              {/* Left Column: Hero Text */}
+              <div className="sms-hero-text">
+                <span className="sms-hero-pill">🎓 Bright Future Portal</span>
+                <h1>School Management System</h1>
+                <p>
+                  Welcome to Bright Future School & College. Track student records,
+                  academic progress, and campus activities with modern real-time performance.
+                </p>
+                <div className="sms-cta-group">
+                  <button
+                    className="sms-btn-submit sms-btn-cta"
+                    onClick={() => setCurrentPage('dashboard')}
+                  >
+                    View Student Profile
+                  </button>
+                  <button
+                    className="sms-menu-item sms-btn-outline"
+                    onClick={() => setCurrentPage('about')}
+                  >
+                    Learn More
+                  </button>
+                </div>
+              </div>
+
+              {/* Right Column: Foreground Interactive Slideshow */}
+              <div className="sms-hero-showcase">
+                <div className="sms-showcase-frame">
+                  <img
+                    src={slides[currentSlide]}
+                    alt={`Campus Slide ${currentSlide + 1}`}
+                    className="sms-showcase-img"
+                  />
+                  <div className="sms-showcase-caption-bar">
+                    <span className="sms-showcase-badge">Campus Spotlight</span>
+                    <p>
+                      {currentSlide === 0 && 'Modern Academic Campus & Facilities'}
+                      {currentSlide === 1 && 'Collaborative Learning & Study Centers'}
+                      {currentSlide === 2 && 'Student Engagement & Discovery'}
+                    </p>
+                  </div>
+                  {/* Prev / Next buttons */}
+                  <button
+                    className="sms-showcase-arrow prev"
+                    onClick={() => setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length)}
+                    aria-label="Previous slide"
+                  >
+                    ‹
+                  </button>
+                  <button
+                    className="sms-showcase-arrow next"
+                    onClick={() => setCurrentSlide((prev) => (prev + 1) % slides.length)}
+                    aria-label="Next slide"
+                  >
+                    ›
+                  </button>
+                </div>
+
+                {/* Thumbnails to switch slides directly */}
+                <div className="sms-showcase-thumbs">
+                  {slides.map((slide, i) => (
+                    <button
+                      key={i}
+                      className={`sms-thumb-btn ${i === currentSlide ? 'active' : ''}`}
+                      onClick={() => setCurrentSlide(i)}
+                      aria-label={`Select slide ${i + 1}`}
+                    >
+                      <img src={slide} alt={`Thumbnail ${i + 1}`} />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Campus Highlights Gallery in Foreground */}
+            <div className="sms-gallery-block">
+              <div className="sms-gallery-header">
+                <h2>Campus Facilities & Community</h2>
+                <p>Explore our academic environment, smart classrooms, and everyday student life</p>
+              </div>
+
+              <div className="sms-gallery-grid">
+                <div className="sms-gallery-card">
+                  <div className="sms-card-img-box">
+                    <img src={studentsImg} alt="Students Community" />
+                  </div>
+                  <div className="sms-card-body">
+                    <h3>Student Community</h3>
+                    <p>Enabling students to collaborate, build lifelong friendships, and achieve academic excellence.</p>
+                  </div>
+                </div>
+
+                <div className="sms-gallery-card">
+                  <div className="sms-card-img-box">
+                    <img src={teachersImg} alt="Dedicated Teachers" />
+                  </div>
+                  <div className="sms-card-body">
+                    <h3>Dedicated Faculty</h3>
+                    <p>Experienced educators and mentors guiding students every step toward future success.</p>
+                  </div>
+                </div>
+
+                <div className="sms-gallery-card">
+                  <div className="sms-card-img-box">
+                    <img src={classroomImg} alt="Smart Classroom" />
+                  </div>
+                  <div className="sms-card-body">
+                    <h3>Smart Classrooms</h3>
+                    <p>High-tech, interactive learning environments equipped with modern digital tools.</p>
+                  </div>
+                </div>
+
+                <div className="sms-gallery-card">
+                  <div className="sms-card-img-box">
+                    <img src={projectImg} alt="Innovation and Projects" />
+                  </div>
+                  <div className="sms-card-body">
+                    <h3>Innovation & Projects</h3>
+                    <p>Fostering practical hands-on experiments, scientific inquiry, and tech development.</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         )}
@@ -245,7 +354,7 @@ function App() {
                 />
               </div>
               <button type="submit" className="sms-btn-submit">
-                Sign In to Portal
+                Login
               </button>
             </form>
           </div>
