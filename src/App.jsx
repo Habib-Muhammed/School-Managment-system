@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import slide1 from './assets/images/slide1.jpg';
 import slide2 from './assets/images/slide2.jpg';
 import slide3 from './assets/images/slide3.jpg';
+import './styles/main.css';
+import './App.css';
 
 function App() {
   // Navigation State: 'home' | 'dashboard' | 'about' | 'contact' | 'signin'
@@ -16,6 +18,16 @@ function App() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [prevSlide, setPrevSlide] = useState(null);
   const [fading, setFading] = useState(false);
+
+  // Student Info State
+  const [studentInfo, setStudentInfo] = useState(null);
+
+  const loadDashboard = async () => {
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
+  const response = await fetch(`${baseUrl}/students/profile`);
+  const data = await response.json();
+  // State updates go here
+};
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -59,7 +71,7 @@ function App() {
         <div className="sms-nav-container">
           <div className="sms-brand" onClick={() => setCurrentPage('home')}>
             <span className="sms-logo">🎓</span>
-            <span className="sms-brand-text">SchoolHub</span>
+            <span className="sms-brand-text">Bright Future School & College</span>
           </div>
 
           <nav className="sms-menu-links">
