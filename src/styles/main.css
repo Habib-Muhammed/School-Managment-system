@@ -1,4 +1,4 @@
-/* Update your container to handle the image layer overlay */
+/* Container to handle the image layer overlay */
 .sms-bg-container {
   position: fixed;
   top: 0;
@@ -6,12 +6,12 @@
   width: 100%;
   height: 100%;
   z-index: 0;
-  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #111827 100%);
+  background: #0b1120;
   overflow: hidden;
   pointer-events: none;
 }
 
-/* New: Background image slide configuration */
+/* Background slideshow images - clear, vibrant visibility */
 .sms-bg-slide {
   position: absolute;
   top: 0;
@@ -20,7 +20,19 @@
   height: 100%;
   background-size: cover;
   background-position: center;
-  opacity: 0.12; /* Keeps the text on your glass cards completely readable */
-  filter: blur(4px); /* Softens the image detail so it acts as an ambient texture */
-  transition: opacity 1s ease-in-out; /* Smooth transition effect */
+  opacity: 0.60;
+  filter: blur(0px);
+  transition: opacity 1s ease-in-out;
+}
+
+/* School Logo image styling */
+.sms-logo-img {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  object-fit: contain;
+  background: #ffffff;
+  padding: 2px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  display: block;
 }
